@@ -1,0 +1,59 @@
+# Flip Scout settings. Edit these and commit; the next scheduled run picks them up.
+
+# --- What a "good flip" means to us -----------------------------------------
+target_profit_min: 10000      # we want at least this much profit after all costs
+target_profit_max: 20000      # typical upside we're aiming for (bigger is fine too)
+alert_profit_floor: 7500      # still email us if est. profit is above this (close calls)
+max_all_in_budget: 75000      # don't suggest anything that costs more than this all-in
+
+# What we've already flipped successfully / know how to sell. The analyst gives
+# these extra weight and uses them as a reference for what kind of deals we like.
+track_record:
+  - "Aquatic weed / lake harvesters (bought at auction, resold to lake associations & contractors)"
+  - "Military truck (surplus 2.5-ton / 5-ton style, resold to collectors/off-road/farm buyers)"
+
+# Categories worth a hard look (not exclusive -- the analyst will flag anything with margin).
+interests:
+  - lake / aquatic weed harvesters, shore conveyors, harvester trailers
+  - military surplus trucks and trailers (M35, M923/M925, LMTV, Humvee, etc.)
+  - municipal dump trucks, plow trucks, bucket trucks, sewer jetters, street sweepers
+  - heavy equipment (loaders, backhoes, excavators, skid steers, forklifts)
+  - boats, pontoons, work barges, boat trailers
+  - specialty / niche equipment with a thin local market but a strong national one
+
+# --- Our costs ----------------------------------------------------------------
+buyer_premium_pct: 13         # Obenauf online buyer's fee (check each auction's terms; 10-13%)
+sales_tax_pct: 8.5            # set to 0 if you buy with a resale exemption certificate
+credit_card_fee_pct: 0        # 4 if paying by card; 0 for wire/cashier's check
+default_transport_cost: 1500  # rough haul cost if the item can't be driven away
+selling_fees_pct: 5           # listing / marketplace / dealer fees when we resell
+
+# --- Where to look ------------------------------------------------------------
+start_urls:
+  - https://obenaufauctionsonline.com/current-auctions/
+  - https://bid.obenaufauctionsonline.com/
+  # Obenauf's live/onsite sales are sometimes cataloged on Proxibid / AuctionZip:
+  - https://www.auctionzip.com/IL-Auctioneers/1511.html
+
+# A link is treated as an auction catalog if its URL matches one of these.
+auction_url_patterns:
+  - 'bid\.obenaufauctionsonline\.com/Public/Auction/AuctionDetails'
+  - 'bid\.obenaufauctionsonline\.com/Public/Auction/AuctionItems'
+  - 'proxibid\.com/.*Obenauf.*/event-catalog/'
+
+# A link inside a catalog is treated as an individual lot if it matches one of these.
+item_url_patterns:
+  - 'AuctionItemDetail'
+  - 'AuctionItemId='
+  - 'ItemDetail'
+  - '/lotInformation/'
+  - '/lot-detail'
+
+max_auctions_per_run: 25
+max_catalog_pages_per_auction: 40
+
+# --- Models ---------------------------------------------------------------------
+screen_model: claude-haiku-5-5   # cheap first pass over every lot
+analyst_model: claude-opus-5-5   # deep valuation w/ web comps on the shortlist
+analyst_effort: high
+max_deep_dives_per_run: 15       # cost guard
