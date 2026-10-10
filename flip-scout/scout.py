@@ -22,6 +22,7 @@ from scraper import Crawler
 
 HERE = Path(__file__).parent
 STATE_FILE = HERE / "state" / "seen.json"
+REPORTS_DIR = HERE / "reports"
 CENTRAL = ZoneInfo("America/Chicago")
 STATE_RETENTION_DAYS = 120
 REMIND_WITHIN = timedelta(hours=30)
@@ -142,15 +143,30 @@ def main() -> None:
             entry["reminded"] = now.isoformat()
 
     new_deals.sort(key=lambda l: l["deal"]["est_profit_at_expected_hammer"], reverse=True)
+    stamp = now.strftime("%Y-%m-%d %H:%M %Z")
+    REPORTS_DIR.mkdir(exist_ok=True)
+    status = [
+        f"# Last scan - {stamp}",
+        "",
+        f"- Open auctions scanned: {len(auctions)}",
+        f"- New lots shortlisted for appraisal: {len(shortlist)}",
+        f"- New flip candidates: {len(new_deals)}",
+        f"- Closing-soon reminders: {len(reminders)}",
+    ]
     if new_deals or reminders:
-        subject, html_body, text = notify.build_report(new_deals, reminders)
+        md = notify.build_markdown(new_deals, reminders, stamp)
         if args.dry_run:
-            print(text)
-            (HERE / "last_report.html").write_text(html_body)
+            print(md)
         else:
-            notify.send(subject, html_body, text)
+            finds = REPORTS_DIR / "finds"
+            finds.mkdir(exist_ok=True)
+            (finds / f"{now:%Y-%m-%d_%H%M}.md").write_text(md)
+            # Email is optional: it only goes out if the SMTP/ALERT_EMAILS secrets are set.
+            notify.send(*notify.build_report(new_deals, reminders))
     else:
         log.info("nothing alert-worthy this run")
+    if not args.dry_run:
+        (REPORTS_DIR / "last_scan.md").write_text("\n".join(status) + "\n")
 
     if not args.dry_run:
         save_state(state)
