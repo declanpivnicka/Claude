@@ -1,7 +1,7 @@
 # Obenauf Flip Scout
 
 An agent that watches **Obenauf Auction Service (Round Lake, IL)** auctions around the clock and reports
-you lots that look like **$10k–$20k flips**: lake harvesters, military trucks, municipal and heavy
+lots that look like **$10k–$20k flips**: lake harvesters, military trucks, municipal and heavy
 equipment, boats, and anything else with real margin.
 
 ## What it does (every 2 hours)
