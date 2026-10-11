@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -75,6 +77,9 @@ def main() -> None:
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        log.error("ANTHROPIC_API_KEY is not set - add it under Settings > Secrets and variables > Actions")
+        sys.exit(1)
     cfg = yaml.safe_load((HERE / "config.yaml").read_text())
     state = load_state()
     now = datetime.now(CENTRAL)
