@@ -116,5 +116,47 @@ def send(subject: str, html_body: str, text: str) -> None:
         sent = True
 
     if not sent:
-        log.warning("no ALERT_EMAILS/SMTP or WEBHOOK_URL configured - printing instead")
-        print(text)
+        log.info("no email/webhook configured - finds are only saved to reports/finds/")
+
+
+def _deal_md(lot: dict, reminder: bool) -> str:
+    d = lot["deal"]
+    lines = [
+        f"### {'⏰ CLOSING SOON - ' if reminder else ''}{d['verdict']}: {lot['title']}",
+        "",
+        f"**Listing:** {lot['url']}  ",
+        f"**Auction:** {lot['auction_title']} · Lot {lot.get('lot_number') or '?'} · "
+        f"Closes {lot.get('closes_at') or 'see listing'}",
+        "",
+        d["headline"],
+        "",
+        f"- Current bid (when found): {_money(lot.get('current_bid'))}",
+        f"- Expected hammer: {_money(d['expected_hammer_price'])}",
+        f"- **Walk-away max bid: {_money(d['max_bid'])}**",
+        f"- Resale estimate: {_money(d['est_resale_low'])} - {_money(d['est_resale_high'])}",
+        f"- All-in cost @ expected hammer: {_money(d['all_in_cost_at_expected_hammer'])} "
+        f"(repairs {_money(d['repair_estimate'])}, transport {_money(d['transport_estimate'])})",
+        f"- **Est. profit: {_money(d['est_profit_at_expected_hammer'])}** ({d['confidence']} confidence)",
+        f"- Time to sell: ~{d['days_to_sell']} days · {d['where_to_sell']}",
+        f"- Buyers: {d['buyer_pool']}",
+        "",
+        "Comps:",
+        *[f"- {c['description']} - {_money(c['price'])} ({c['source_url']})" for c in d["comps"][:6]],
+        "",
+        "Risks:",
+        *[f"- {r}" for r in d["risks"]],
+        "",
+        "Check before bidding:",
+        *[f"- {c}" for c in d["inspection_checklist"]],
+        "",
+    ]
+    return "\n".join(lines)
+
+
+def build_markdown(new_deals: list[dict], reminders: list[dict], run_time: str) -> str:
+    parts = [f"# Flip Scout finds - {run_time}", ""]
+    if new_deals:
+        parts += ["## New flip candidates", ""] + [_deal_md(l, False) for l in new_deals]
+    if reminders:
+        parts += ["## Closing within a day", ""] + [_deal_md(l, True) for l in reminders]
+    return "\n".join(parts)
