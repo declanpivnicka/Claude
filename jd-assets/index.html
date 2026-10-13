@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="J&amp;D Assets helps retiring lake and pond business owners build their company into a sellable asset and sell for more.">
+<title>J&amp;D Assets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+body { margin: 0; } img { max-width: 100%; } [hidden] { display: none !important; }
+/* Layout: a lake survey chart. Contour-line hero, then plain, large-type sections
+   with depth-sounding labels in mono. Big readable text for owners 55+. */
+:root {
+  --bg: #EEF2F0;
+  --surface: #FFFFFF;
+  --ink: #10282B;
+  --muted: #4A5F61;
+  --line: #C9D5D2;
+  --lake: #1D5C63;
+  --lake-soft: #DCE8E6;
+  --buoy: #A86F05;
+  --buoy-fill: #F2C14E;
+  --on-buoy: #1C1608;
+  --band: #10282B;
+  --on-band: #E7EFEC;
+  --on-band-muted: #A9BDBA;
+  --display: "Zilla Slab", "Rockwell", Georgia, serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --wrap: 72rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C1A1C; --surface: #132629; --ink: #E4EDEA; --muted: #9DB2B0;
+    --line: #26403F; --lake: #7BBEC0; --lake-soft: #18343A; --buoy: #EDB64F;
+    --buoy-fill: #EDB64F; --on-buoy: #1C1608; --band: #081315; --on-band: #E4EDEA;
+    --on-band-muted: #93A9A6; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C1A1C; --surface: #132629; --ink: #E4EDEA; --muted: #9DB2B0;
+  --line: #26403F; --lake: #7BBEC0; --lake-soft: #18343A; --buoy: #EDB64F;
+  --buoy-fill: #EDB64F; --on-buoy: #1C1608; --band: #081315; --on-band: #E4EDEA;
+  --on-band-muted: #93A9A6; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 1.125rem; line-height: 1.6;
+}
+a { color: var(--lake); }
+:focus-visible { outline: 3px solid var(--buoy); outline-offset: 3px; border-radius: 2px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.12; text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 600; }
+h3 { font-size: 1.4rem; font-weight: 600; }
+p { margin: 0; }
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: 1.25rem; }
+.sounding {
+  font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--lake);
+}
+.lede { font-size: 1.25rem; color: var(--muted); max-width: 40rem; }
+section { padding-block: 5.5rem; }
+.section-head { display: grid; gap: 0.9rem; margin-bottom: 3rem; max-width: 46rem; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  font: 600 1.05rem/1 var(--body); padding: 1rem 1.5rem; border-radius: 4px;
+  text-decoration: none; border: 2px solid transparent; cursor: pointer;
+}
+.btn-primary { background: var(--buoy-fill); color: var(--on-buoy); }
+.btn-primary:hover { filter: brightness(1.05); }
+.btn-ghost { border-color: var(--line); color: var(--ink); background: transparent; }
+.btn-ghost:hover { border-color: var(--lake); }
+
+/* Nav */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.9rem; }
+.brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--ink); }
+.brand-mark { width: 34px; height: 34px; flex: none; }
+.brand-name { font-family: var(--display); font-weight: 700; font-size: 1.45rem; letter-spacing: 0.01em; }
+.nav-links { display: flex; gap: 1.75rem; align-items: center; }
+.nav-links a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 1rem; }
+.nav-links a:hover { color: var(--lake); }
+.nav-links .btn { padding: 0.7rem 1.1rem; font-size: 0.95rem; }
+@media (max-width: 860px) { .nav-links a:not(.btn) { display: none; } }
+
+/* Hero */
+.hero { position: relative; overflow: hidden; padding-block: 5rem 4.5rem; border-bottom: 1px solid var(--line); }
+#contours { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.hero .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+.hero h1 { font-size: clamp(2.6rem, 5.6vw, 4.4rem); font-weight: 700; letter-spacing: -0.01em; }
+.hero h1 em { font-style: normal; color: var(--lake); }
+.hero-copy { display: grid; gap: 1.5rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 0.5rem; }
+.hero-note { font-size: 0.98rem; color: var(--muted); }
+
+.gauge {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  padding: 1.6rem; display: grid; gap: 1.1rem; box-shadow: 0 18px 40px -28px rgba(10, 30, 32, 0.45);
+}
+.gauge-row { display: grid; gap: 0.4rem; }
+.gauge-label { display: flex; justify-content: space-between; gap: 1rem; font-weight: 600; font-size: 1rem; }
+.gauge-label span:last-child { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.bar { height: 14px; background: var(--lake-soft); border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--lake); }
+.bar i.buoy { background: var(--buoy-fill); }
+.gauge small { color: var(--muted); font-size: 0.85rem; line-height: 1.45; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } }
+
+/* Problem band */
+.band { background: var(--band); color: var(--on-band); }
+.band .sounding { color: var(--buoy-fill); }
+.band .lede { color: var(--on-band-muted); }
+.problem-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5rem; }
+.problem-grid > div { display: grid; gap: 0.6rem; align-content: start; border-top: 2px solid var(--buoy-fill); padding-top: 1.2rem; }
+.problem-grid p { color: var(--on-band-muted); }
+@media (max-width: 860px) { .problem-grid { grid-template-columns: 1fr; } }
+
+/* Services */
+.services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.service { background: var(--bg); padding: 2rem 1.75rem; display: grid; gap: 0.75rem; align-content: start; }
+.service svg { width: 40px; height: 40px; color: var(--lake); }
+.service p { color: var(--muted); }
+.service ul { margin: 0.25rem 0 0; padding-left: 1.1rem; color: var(--ink); font-size: 1rem; display: grid; gap: 0.3rem; }
+@media (max-width: 960px) { .services { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .services { grid-template-columns: 1fr; } }
+
+/* Process */
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; counter-reset: step; }
+.step { display: grid; gap: 0.7rem; align-content: start; position: relative; padding-top: 3.4rem; }
+.step::before {
+  counter-increment: step; content: counter(step);
+  position: absolute; top: 0; left: 0; width: 2.5rem; height: 2.5rem; border-radius: 50%;
+  display: grid; place-items: center; font: 600 1.1rem/1 var(--mono);
+  background: var(--lake); color: var(--bg);
+}
+.step::after { content: ""; position: absolute; top: 1.25rem; left: 3rem; right: -1rem; border-top: 2px dashed var(--line); }
+.step:last-child::after { display: none; }
+.step .when { font-family: var(--mono); font-size: 0.85rem; color: var(--buoy); }
+.step p { color: var(--muted); }
+@media (max-width: 900px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .step::after { display: none; } }
+@media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+
+/* Calculator */
+.calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 2.5rem; align-items: start; }
+.calc-inputs { display: grid; gap: 1.6rem; }
+.field { display: grid; gap: 0.45rem; }
+.field label { display: flex; justify-content: space-between; gap: 1rem; font-weight: 600; }
+.field output { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--lake); }
+.field .hint { font-size: 0.9rem; color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--lake); height: 1.75rem; }
+.result { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 2rem; display: grid; gap: 1.5rem; }
+.compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.compare > div { display: grid; gap: 0.3rem; padding: 1.1rem; border-radius: 4px; background: var(--lake-soft); }
+.compare > div.win { background: color-mix(in srgb, var(--buoy-fill) 28%, var(--surface)); }
+.compare .big { font: 600 clamp(1.6rem, 3vw, 2.1rem)/1.1 var(--mono); font-variant-numeric: tabular-nums; }
+.compare .cap { font-size: 0.95rem; color: var(--muted); }
+.ledger { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.ledger td { padding: 0.55rem 0; border-bottom: 1px solid var(--line); }
+.ledger td:last-child { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.ledger tr.total td { font-weight: 700; border-bottom: none; padding-top: 0.8rem; }
+.delta { font-size: 1.15rem; font-weight: 600; }
+.delta strong { color: var(--lake); font-family: var(--mono); }
+.disclaimer { font-size: 0.88rem; color: var(--muted); }
+@media (max-width: 900px) { .calc { grid-template-columns: 1fr; } }
+@media (max-width: 460px) { .compare { grid-template-columns: 1fr; } }
+
+/* Before / after */
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.ba { width: 100%; border-collapse: collapse; min-width: 640px; }
+.ba th, .ba td { text-align: left; padding: 1rem 1.25rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ba thead th { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.ba tbody th { font-weight: 600; width: 22%; }
+.ba td:nth-child(2) { color: var(--muted); }
+.ba td:nth-child(3) { color: var(--ink); font-weight: 600; }
+.ba tr:last-child th, .ba tr:last-child td { border-bottom: none; }
+
+/* Who */
+.who { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; }
+.trades { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+.trades span { border: 1px solid var(--line); border-radius: 999px; padding: 0.45rem 0.95rem; font-size: 1rem; background: var(--surface); }
+.fit { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.fit li { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: 0.75rem; }
+.fit li svg { width: 1.6rem; height: 1.6rem; color: var(--lake); margin-top: 0.15rem; }
+@media (max-width: 860px) { .who { grid-template-columns: 1fr; } }
+
+/* FAQ */
+.faq { display: grid; gap: 0; border-top: 1px solid var(--line); max-width: 52rem; }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; padding: 1.3rem 0; font-family: var(--display); font-size: 1.3rem; font-weight: 600; display: flex; justify-content: space-between; gap: 1rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--mono); color: var(--lake); font-size: 1.5rem; line-height: 1; }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding-bottom: 1.4rem; color: var(--muted); max-width: 44rem; }
+
+/* Contact */
+.contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 3rem; align-items: start; }
+.contact .band-copy { display: grid; gap: 1.2rem; }
+form { display: grid; gap: 1.1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+form .full { grid-column: 1 / -1; }
+form label { display: grid; gap: 0.35rem; font-weight: 600; font-size: 1rem; color: var(--on-band); }
+input, select, textarea {
+  font: 400 1.05rem/1.4 var(--body); padding: 0.8rem 0.9rem; border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--on-band) 25%, transparent);
+  background: color-mix(in srgb, var(--on-band) 7%, var(--band)); color: var(--on-band); width: 100%;
+}
+select option { color: #10282B; background: #FFFFFF; }
+textarea { min-height: 7rem; resize: vertical; }
+.form-msg { grid-column: 1 / -1; padding: 1rem 1.1rem; border-radius: 4px; background: color-mix(in srgb, var(--buoy-fill) 18%, var(--band)); border: 1px solid var(--buoy-fill); }
+@media (max-width: 860px) { .contact { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { form { grid-template-columns: 1fr; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 2.5rem; color: var(--muted); font-size: 0.95rem; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="J&amp;D Assets home">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M6 22c4-3 8-3 12 0s8 3 12 0 6-2 6-2" fill="none" stroke="var(--lake)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M8 28c4-3 8-3 12 0s8 3 12 0" fill="none" stroke="var(--lake)" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+        <circle cx="20" cy="12" r="3.2" fill="var(--buoy-fill)"/>
+      </svg>
+      <span class="brand-name">J&amp;D Assets</span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#what">What we do</a>
+      <a href="#process">How it works</a>
+      <a href="#math">The math</a>
+      <a href="#faq">Questions</a>
+      <a class="btn btn-primary" href="#contact">Book a valuation call</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <canvas id="contours" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="hero-copy">
+        <span class="sounding">For lake &amp; pond business owners getting ready to retire</span>
+        <h1>You built a business that keeps water healthy. Let’s turn it into <em>an asset someone will pay top dollar for.</em></h1>
+        <p class="lede">J&amp;D Assets partners with owners of aeration, aquatic weed control, fountain, dredging and lake management companies. We put in the systems, people and leads so the business runs without you. Then you sell it for more, even after our share.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contact">Book a free valuation call</a>
+          <a class="btn btn-ghost" href="#math">See how the numbers work</a>
+        </div>
+        <p class="hero-note">No upfront fees. We earn a percentage only when your business is worth more.</p>
+      </div>
+
+      <aside class="gauge" aria-label="Example: what changes the sale price">
+        <span class="sounding">Example sale value</span>
+        <div class="gauge-row">
+          <div class="gauge-label"><span>Sell today, owner runs everything</span><span>$1.00M</span></div>
+          <div class="bar"><i style="width:48%"></i></div>
+        </div>
+        <div class="gauge-row">
+          <div class="gauge-label"><span>Sell after J&amp;D, total price</span><span>$2.08M</span></div>
+          <div class="bar"><i style="width:100%"></i></div>
+        </div>
+        <div class="gauge-row">
+          <div class="gauge-label"><span>You keep, after our 25%</span><span>$1.56M</span></div>
+          <div class="bar"><i class="buoy" style="width:75%"></i></div>
+        </div>
+        <small>Illustration only: $400k profit at 2.5× today vs. $520k profit at 4.0× after systems are in place. Every business is different. Try your own numbers below.</small>
+      </aside>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="sounding">The silver tsunami</span>
+        <h2>A wave of owners is retiring at once. Most of their businesses aren’t ready to sell.</h2>
+        <p class="lede">Buyers pay for a business that runs on its own. When every customer, every price and every crew schedule lives in the owner’s head, buyers see risk and offer less, or walk away.</p>
+      </div>
+      <div class="problem-grid">
+        <div>
+          <h3>You are the business</h3>
+          <p>Customers call your cell. You quote the jobs, set the routes and know which HOA pond gets the copper treatment in July. A buyer can’t buy that.</p>
+        </div>
+        <div>
+          <h3>The books tell half the story</h3>
+          <p>Personal expenses mixed in, cash jobs, a shoebox of receipts. If a buyer’s accountant can’t verify the profit, they won’t pay for it.</p>
+        </div>
+        <div>
+          <h3>Growth stalled years ago</h3>
+          <p>Word of mouth kept the trucks busy, but nobody’s chasing the golf courses, municipalities and property managers that bring steady contract work.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="what">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="sounding">What we do</span>
+        <h2>We do the work that turns a job into an asset</h2>
+        <p class="lede">You keep running the crews you know. We build everything around them so the company stands on its own.</p>
+      </div>
+      <div class="services">
+        <article class="service">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="7" y="5" width="26" height="30" rx="2"/><path d="M13 13h14M13 19h14M13 25h8"/></svg>
+          <h3>Clean books</h3>
+          <p>Accurate, buyer-ready financials that prove what the business earns.</p>
+          <ul><li>Untangle personal and business spending</li><li>Monthly reporting you can read</li><li>Three years of clean history for buyers</li></ul>
+        </article>
+        <article class="service">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="8" width="30" height="22" rx="2"/><path d="M5 14h30M14 34h12M20 30v4"/></svg>
+          <h3>Software &amp; CRM</h3>
+          <p>One system for customers, quotes, scheduling and invoicing.</p>
+          <ul><li>Field service CRM set up for pond work</li><li>Every customer, pond and treatment history in one place</li><li>Recurring service contracts that bill themselves</li></ul>
+        </article>
+        <article class="service">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="20" cy="20" r="6"/><path d="M20 4v6M20 30v6M4 20h6M30 20h6M8.7 8.7l4.2 4.2M27.1 27.1l4.2 4.2M8.7 31.3l4.2-4.2M27.1 12.9l4.2-4.2"/></svg>
+          <h3>The right AI, used sensibly</h3>
+          <p>Tools that save your office hours, not gadgets for their own sake.</p>
+          <ul><li>Calls and web leads answered after hours</li><li>Quote follow-ups that go out on time</li><li>Service reports drafted from tech notes</li></ul>
+        </article>
+        <article class="service">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="14" cy="13" r="5"/><circle cx="28" cy="15" r="4"/><path d="M4 33c1-6 5-9 10-9s9 3 10 9M23 27c1-3 3-5 6-5 4 0 6 3 7 8"/></svg>
+          <h3>The right people in place</h3>
+          <p>A team that can run the day without calling you.</p>
+          <ul><li>Hire or promote an operations manager</li><li>Crew leads who own their routes</li><li>Written procedures for every service</li></ul>
+        </article>
+        <article class="service">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 20l8 8 16-16"/><rect x="4" y="4" width="32" height="32" rx="3"/></svg>
+          <h3>Lighter admin</h3>
+          <p>Less paperwork for you, fewer things falling through the cracks.</p>
+          <ul><li>Permits and chemical application records organized</li><li>Payroll, invoicing and collections on autopilot</li><li>Customer contracts in writing</li></ul>
+        </article>
+        <article class="service">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 32l9-10 7 6 8-11 8 7"/><path d="M28 9h6v6"/></svg>
+          <h3>More qualified leads</h3>
+          <p>Steady, contract-ready work from the customers buyers value most.</p>
+          <ul><li>HOAs, golf courses, municipalities and property managers</li><li>A website and local search presence that brings calls</li><li>Leads screened before they reach your desk</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="process" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="sounding">How it works</span>
+        <h2>Four stages, from first call to closing day</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="when">Weeks 1–4</span>
+          <h3>Valuation &amp; fit</h3>
+          <p>We look at your books, customers and crews, then tell you plainly what the business would sell for today and what it could sell for.</p>
+        </div>
+        <div class="step">
+          <span class="when">Month 2</span>
+          <h3>Partnership</h3>
+          <p>We agree on a percentage and a written plan. You pay no fees. Our share comes from the higher sale price.</p>
+        </div>
+        <div class="step">
+          <span class="when">Months 2–24</span>
+          <h3>Build</h3>
+          <p>Books, software, AI, hiring and lead generation. You step back from daily work as the team and systems take over.</p>
+        </div>
+        <div class="step">
+          <span class="when">When you’re ready</span>
+          <h3>Sell</h3>
+          <p>We prepare the sale package, find serious buyers and help you negotiate. You walk away on your terms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="math" style="background:var(--lake-soft)">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="sounding">The math</span>
+        <h2>Why a smaller slice of a bigger sale leaves you with more</h2>
+        <p class="lede">Buyers price small businesses as a multiple of yearly profit. Owner-run companies get a low multiple. Companies with clean books, a team and contract revenue get a higher one. Move the sliders to try your own numbers.</p>
+      </div>
+      <div class="calc">
+        <div class="calc-inputs">
+          <div class="field">
+            <label for="profit">Your yearly profit today <output id="profit-out" for="profit"></output></label>
+            <input type="range" id="profit" min="100000" max="2000000" step="25000" value="400000">
+            <span class="hint">What you take home plus what the business earns, before taxes.</span>
+          </div>
+          <div class="field">
+            <label for="mult-now">Multiple a buyer pays today <output id="mult-now-out" for="mult-now"></output></label>
+            <input type="range" id="mult-now" min="1.5" max="4" step="0.1" value="2.5">
+            <span class="hint">Owner-dependent service companies often sell in the low range.</span>
+          </div>
+          <div class="field">
+            <label for="growth">Profit growth from our work <output id="growth-out" for="growth"></output></label>
+            <input type="range" id="growth" min="0" max="80" step="5" value="30">
+            <span class="hint">From new leads, contract pricing and less wasted time.</span>
+          </div>
+          <div class="field">
+            <label for="mult-after">Multiple after systems are in place <output id="mult-after-out" for="mult-after"></output></label>
+            <input type="range" id="mult-after" min="2" max="6" step="0.1" value="4">
+            <span class="hint">A business that runs without its owner is less risky to buy.</span>
+          </div>
+          <div class="field">
+            <label for="share">J&amp;D Assets share <output id="share-out" for="share"></output></label>
+            <input type="range" id="share" min="10" max="40" step="1" value="25">
+            <span class="hint">Set in your partnership agreement.</span>
+          </div>
+        </div>
+
+        <div class="result" aria-live="polite">
+          <div class="compare">
+            <div>
+              <span class="sounding">Sell today</span>
+              <span class="big" id="r-now"></span>
+              <span class="cap">You keep 100%</span>
+            </div>
+            <div class="win">
+              <span class="sounding">Sell with J&amp;D</span>
+              <span class="big" id="r-net"></span>
+              <span class="cap">You keep, after our share</span>
+            </div>
+          </div>
+          <table class="ledger">
+            <tbody>
+              <tr><td>Yearly profit after our work</td><td id="l-profit"></td></tr>
+              <tr><td>Sale price</td><td id="l-price"></td></tr>
+              <tr><td>J&amp;D Assets share</td><td id="l-share"></td></tr>
+              <tr class="total"><td>You receive</td><td id="l-net"></td></tr>
+            </tbody>
+          </table>
+          <p class="delta" id="delta"></p>
+          <p class="disclaimer">This is an illustration, not an appraisal or a promise. Real sale prices depend on your market, customers, equipment and the buyer. We give you a real valuation on the first call.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="sounding">Monday morning, before and after</span>
+        <h2>What a buyer sees when they look under the hood</h2>
+      </div>
+      <div class="table-scroll">
+        <table class="ba">
+          <thead><tr><th scope="col">Area</th><th scope="col">Today</th><th scope="col">After J&amp;D Assets</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Customer calls</th><td>Ring the owner’s cell phone</td><td>Answered by the office or an AI receptionist, logged in the CRM</td></tr>
+            <tr><th scope="row">Scheduling</th><td>Whiteboard and memory</td><td>Routes built in software, crews see them on their phones</td></tr>
+            <tr><th scope="row">Treatment records</th><td>Paper logs in the truck</td><td>Digital records per pond, ready for state reporting</td></tr>
+            <tr><th scope="row">Revenue</th><td>One-off jobs, mostly spring and summer</td><td>Annual service contracts with HOAs, golf courses and towns</td></tr>
+            <tr><th scope="row">Books</th><td>Year-end scramble with the accountant</td><td>Clean monthly statements a buyer can trust</td></tr>
+            <tr><th scope="row">The owner</th><td>Works 60 hours, can’t take a vacation in June</td><td>Checks the numbers weekly, could leave for a month</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top:1px solid var(--line)">
+    <div class="wrap who">
+      <div>
+        <div class="section-head" style="margin-bottom:0">
+          <span class="sounding">Who we work with</span>
+          <h2>Built only for the lake and pond industry</h2>
+          <p class="lede">We know the work: aeration systems, algae and weed control, permits, seasonal crews and the customers who hire you. That focus is why we can raise what your company is worth.</p>
+        </div>
+        <div class="trades">
+          <span>Lake &amp; pond management</span><span>Aeration &amp; fountains</span><span>Aquatic weed &amp; algae control</span><span>Dredging &amp; muck removal</span><span>Shoreline restoration</span><span>Pond construction</span><span>Fish stocking &amp; fisheries</span><span>Stormwater pond maintenance</span>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:1.25rem">You may be a good fit if</h3>
+        <ul class="fit">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>You’re thinking about retiring in the next two to seven years</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Your company is profitable and has loyal, repeat customers</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Too much of the business still depends on you personally</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>You want your crews and customers taken care of after you leave</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>You’d rather share a bigger sale than settle for a small one</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" style="border-top:1px solid var(--line)">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="sounding">Questions owners ask us</span>
+        <h2>Straight answers</h2>
+      </div>
+      <div class="faq">
+        <details open>
+          <summary>How do you get paid?</summary>
+          <p>We take an agreed percentage of the business, paid out of the sale. There are no monthly fees or consulting bills. If the business isn’t worth more, we don’t do well either, so our interests line up with yours.</p>
+        </details>
+        <details>
+          <summary>Do I lose control of my company?</summary>
+          <p>No. You stay the owner and make the final calls. We work alongside you and your team, and every major change is agreed with you first.</p>
+        </details>
+        <details>
+          <summary>What happens to my employees and customers?</summary>
+          <p>They’re the reason the business is valuable. We train your people, give them better tools and look for buyers who will keep the team and keep serving your customers well.</p>
+        </details>
+        <details>
+          <summary>I’m not good with computers. Is that a problem?</summary>
+          <p>Not at all. We set up the software, train the office and crews, and keep it simple. You’ll get a short weekly report you can read on paper if you like.</p>
+        </details>
+        <details>
+          <summary>How long does this take?</summary>
+          <p>Most of the work happens over 12 to 24 months. Some owners sell sooner, some stay on longer to grow further. You decide when to sell.</p>
+        </details>
+        <details>
+          <summary>Is our conversation confidential?</summary>
+          <p>Yes. We’re happy to sign a confidentiality agreement before you share any numbers. Your employees and customers won’t hear about it from us.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="band">
+    <div class="wrap contact">
+      <div class="band-copy">
+        <span class="sounding">Free valuation call</span>
+        <h2>Find out what your business is worth today, and what it could be worth</h2>
+        <p class="lede">A 30-minute, no-obligation conversation. We’ll ask about your services, customers and crews, and give you an honest read on your options.</p>
+      </div>
+      <form id="lead-form" novalidate>
+        <label>Your name<input id="f-name" name="name" autocomplete="name" required></label>
+        <label>Company name<input id="f-company" name="company" autocomplete="organization" required></label>
+        <label>Phone<input id="f-phone" name="phone" type="tel" autocomplete="tel"></label>
+        <label>Email<input id="f-email" name="email" type="email" autocomplete="email" required></label>
+        <label>State<input id="f-state" name="state" autocomplete="address-level1"></label>
+        <label>Yearly revenue
+          <select id="f-revenue" name="revenue">
+            <option value="">Choose a range</option>
+            <option>Under $500k</option>
+            <option>$500k – $1M</option>
+            <option>$1M – $3M</option>
+            <option>$3M – $10M</option>
+            <option>Over $10M</option>
+          </select>
+        </label>
+        <label class="full">When are you hoping to retire?
+          <select id="f-timeline" name="timeline">
+            <option value="">Choose one</option>
+            <option>Within 2 years</option>
+            <option>2 to 5 years</option>
+            <option>5+ years</option>
+            <option>Not sure yet</option>
+          </select>
+        </label>
+        <label class="full">Anything else we should know?<textarea id="f-notes" name="notes" placeholder="Services you offer, how many crews, what worries you about selling…"></textarea></label>
+        <div class="full"><button class="btn btn-primary" type="submit">Request my valuation call</button></div>
+        <p class="form-msg" id="form-msg" role="status" hidden></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 J&amp;D Assets. Helping lake and pond business owners retire on their terms.</span>
+    <span>Confidential conversations · No upfront fees</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Calculator
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (n) {
+    if (n >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
+    return "$" + Math.round(n / 1000) + "k";
+  };
+  function calc() {
+    var p = +$("profit").value, mn = +$("mult-now").value, g = +$("growth").value,
+        ma = +$("mult-after").value, s = +$("share").value;
+    var now = p * mn, p2 = p * (1 + g / 100), price = p2 * ma, cut = price * s / 100, net = price - cut;
+    $("profit-out").textContent = money(p);
+    $("mult-now-out").textContent = mn.toFixed(1) + "×";
+    $("growth-out").textContent = "+" + g + "%";
+    $("mult-after-out").textContent = ma.toFixed(1) + "×";
+    $("share-out").textContent = s + "%";
+    $("r-now").textContent = money(now);
+    $("r-net").textContent = money(net);
+    $("l-profit").textContent = money(p2);
+    $("l-price").textContent = money(price);
+    $("l-share").textContent = "−" + money(cut);
+    $("l-net").textContent = money(net);
+    var d = net - now;
+    $("delta").innerHTML = d > 0
+      ? "That’s <strong>" + money(d) + "</strong> more in your pocket than selling today."
+      : "With these numbers you’d do better selling today. We’ll tell you that honestly on the call.";
+  }
+  ["profit", "mult-now", "growth", "mult-after", "share"].forEach(function (id) { $(id).addEventListener("input", calc); });
+  calc();
+
+  // Form (no backend yet)
+  $("lead-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var msg = $("form-msg");
+    var name = $("f-name").value.trim(), company = $("f-company").value.trim(), email = $("f-email").value.trim();
+    if (!name || !company || !/^\S+@\S+\.\S+$/.test(email)) {
+      msg.textContent = "Please add your name, company name and a valid email so we can reach you.";
+    } else {
+      msg.textContent = "Thanks, " + name.split(" ")[0] + ". Your details are filled in, but this preview isn’t connected to an inbox yet, so nothing was sent.";
+    }
+    msg.hidden = false;
+  });
+
+  // Bathymetric contour hero
+  var cv = $("contours"), ctx = cv.getContext("2d");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var lobes = [[2, 0.11, 0.6], [3, 0.07, 2.1], [5, 0.035, 4.0], [7, 0.02, 1.3]];
+  var depths = ["2 ft", "4 ft", "6 ft", "8 ft", "10 ft", "12 ft", "14 ft", "16 ft"];
+  function draw(t) {
+    var w = cv.clientWidth, h = cv.clientHeight, dpr = window.devicePixelRatio || 1;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    var css = getComputedStyle(document.documentElement);
+    var lake = css.getPropertyValue("--lake").trim() || "#1D5C63";
+    var cx = w > 860 ? w * 0.78 : w * 0.7, cy = h * 0.5;
+    var R = Math.max(w, h) * 0.62, n = 16;
+    ctx.font = "11px 'IBM Plex Mono', monospace";
+    for (var k = 0; k < n; k++) {
+      var f = 1 - k / n, r0 = R * f;
+      ctx.beginPath();
+      for (var i = 0; i <= 180; i++) {
+        var a = i / 180 * Math.PI * 2, m = 1;
+        for (var j = 0; j < lobes.length; j++) {
+          var L = lobes[j];
+          m += L[1] * (0.6 + 0.6 * f) * Math.sin(L[0] * a + L[2] + k * 0.18 + t * 0.00006 * (j + 1));
+        }
+        var x = cx + Math.cos(a) * r0 * m * 1.25, y = cy + Math.sin(a) * r0 * m * 0.8;
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = lake;
+      ctx.globalAlpha = k % 4 === 0 ? 0.28 : 0.13;
+      ctx.lineWidth = k % 4 === 0 ? 1.4 : 1;
+      ctx.stroke();
+      if (k % 2 === 0 && k / 2 < depths.length && k > 0) {
+        var la = -0.5, lm = 1;
+        for (var q = 0; q < lobes.length; q++) {
+          var Q = lobes[q];
+          lm += Q[1] * (0.6 + 0.6 * f) * Math.sin(Q[0] * la + Q[2] + k * 0.18 + t * 0.00006 * (q + 1));
+        }
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = lake;
+        ctx.fillText(depths[k / 2], cx + Math.cos(la) * r0 * lm * 1.25 + 4, cy + Math.sin(la) * r0 * lm * 0.8);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  function loop(t) { draw(t); requestAnimationFrame(loop); }
+  if (reduce) { draw(0); window.addEventListener("resize", function () { draw(0); }); }
+  else requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
